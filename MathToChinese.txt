@@ -1,0 +1,143 @@
+package fs;
+
+import java.util.Scanner;
+
+public class MathToChinese {
+	public void speak(int a) {
+		switch(a) {
+		case 0:
+			System.out.print('零');
+			break;
+		case 1:
+			System.out.print('壹');
+			break;
+		case 2:
+			System.out.print('贰');
+			break;
+		case 3:
+			System.out.print('叁');
+			break;
+		case 4:
+			System.out.print('拾');
+			break;
+		case 5:
+			System.out.print('伍');
+			break;
+		case 6:
+			System.out.print('六');
+			break;
+		case 7:
+			System.out.print('七');
+			break;
+		case 8:
+			System.out.print('捌');
+			break;
+		case 9:
+			System.out.print('九');
+			break;
+		}
+	}
+	public void cal(int a,int k,boolean kk) {//k表示是否有万位有数值，万位以下的数值千位或者百位或者十位为0要补零字
+		                                     //当万位以上没有数值，此时k=1,那么此时由kk进行判定,kk为false，否则将多出一个零字
+		int b = a;
+		int count = 0;
+		boolean flag = true;
+		int thousand;
+		int hundred;
+		int ten;
+		int one;
+		while(b != 0) {
+			count++;
+			b /= 10;
+		}
+		//System.out.println("count:"+count);
+		if(count==4) {
+			thousand = a/1000;
+			speak(thousand);
+			System.out.print('仟');
+			a %= 1000;
+			
+			if(a==0)
+				return;
+			hundred = a/100;
+			speak(hundred);
+			if(hundred != 0)
+			System.out.print('佰');
+			if(hundred == 0)
+				flag = false;
+			a %= 100;
+			
+			if(a==0)
+				return;
+			ten = a/10;
+			if(ten>0||ten==0&&flag==true) {
+				speak(ten);
+				if(ten!=0)
+				System.out.print('十');
+			}
+			a %= 10;
+			
+			one = a;
+			if(one>0)
+				speak(one);
+		}else if(count==3) {
+			if(k==1&&kk==true)
+				System.out.print('零');
+			hundred = a/100;
+			speak(hundred);
+			System.out.print('佰');
+			a %= 100;
+			
+			if(a==0)
+				return;
+			ten = a/10;
+			speak(ten);
+			if(ten != 0)
+			System.out.print('十');
+			if(ten == 0)
+				flag = false;
+			a %= 10;
+			
+			one = a;
+			if(one>0)
+				speak(one);
+		}else if(count==2) {
+			if(k==1&&kk==true)
+				System.out.print('零');
+			ten = a/10;
+			speak(ten);
+			System.out.print('十');
+			a %= 10;
+			
+			one = a;
+			if(one>0)
+				speak(one);
+		}else if(count==1) {
+			if(k==1&&kk==true)
+				System.out.print('零');
+			one = a;
+			if(one>0)
+				speak(one);
+		}
+	}
+	public static void main(String[] args) {
+		MathToChinese first = new MathToChinese();
+		Scanner sc = new Scanner(System.in);
+		System.out.println("请输入金额(整数，千万以内):");
+		int  money = sc.nextInt();
+		boolean kk = false;//标记是否有万位以上，如果没有则输出万位以下前不带零字
+		if(money/10000>0) {
+			first.cal(money/10000,0,kk);
+			System.out.print('萬');
+			money %= 10000;
+			kk = true;
+		}
+		if(money>0) {
+			first.cal(money,1,kk);
+			System.out.print('元');
+		}
+		if(money==0) {
+			System.out.print(money+"元");
+		}
+	}
+}
